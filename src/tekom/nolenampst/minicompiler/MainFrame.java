@@ -1,0 +1,347 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tekom.nolenampst.minicompiler;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.CodeEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+/**
+ *
+ * @author andik_000
+ */
+public class MainFrame extends javax.swing.JFrame {
+
+    
+    /**
+     * Creates new form MainFrame
+     */
+    public MainFrame() {
+        initiateCodeSyntax();
+        initComponents();
+        setLocationRelativeTo(null);
+        add(codeEditor.getContainerWithLines());
+    }
+
+    private void initiateCodeSyntax(){
+        syntax = new HashMap();
+        for(int i = 0; i < ConstantVariable.RESERVED_WORD.length; i++){
+            syntax.put(ConstantVariable.RESERVED_WORD[i], Color.BLUE);
+        }
+        Color color = new Color(50, 130, 50);
+        syntax.put("#include", color);
+        syntax.put("#define", color);
+        syntax.put("using", Color.BLUE);
+//        syntax.put("namespace", Color.BLUE);
+//        syntax.put("public", Color.BLUE);
+//        syntax.put("static", Color.BLUE);
+//        syntax.put("void", Color.BLUE);
+//        syntax.put("int", Color.BLUE);
+//        syntax.put("char", Color.BLUE);
+//        syntax.put("float", Color.BLUE);
+//        syntax.put("double", Color.BLUE);
+//        syntax.put("return", Color.BLUE);
+//        syntax.put("main", Color.BLUE);
+//        syntax.put("System", Color.ORANGE);
+//        syntax.put("out", Color.GREEN);
+//        syntax.put("err", Color.RED);
+        syntax.put("print(\\w{2})", Color.CYAN);
+        
+        codeEditor = new CodeEditorPane();
+        codeEditor.setKeywordColor(syntax);
+        Font font = new Font("Monospaced", Font.PLAIN, 12);
+        codeEditor.setFont(font);
+        codeEditor.setText(
+                "#include <iostream> \n\n" +
+                "using namespace std; \n\n" +
+                "int main()\n{\n  cout << \"Hello world\" << endl;\n  return 0;\n} "
+                );
+//        codeEditor.setText("public static void main(String args[]) {\n "
+//                + " System.out.println(\"this is an example\");\n  //This is a comment\n}");
+               
+        codeEditor.setVerticalLineAtPos(120);
+    }
+    
+    private void saveFileCpp(){
+        jFileChooserSave = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("C++ source code file (.cpp)", "cpp");
+        jFileChooserSave.setSelectedFile(new File("untitled.cpp"));
+        jFileChooserSave.setAcceptAllFileFilterUsed(false);
+        jFileChooserSave.addChoosableFileFilter(filter);
+        int returnVal = jFileChooserSave.showSaveDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            fileCpp = new File(jFileChooserSave.getSelectedFile().getAbsolutePath());
+            try {
+                if(!fileCpp.exists()){
+                    fileCpp.createNewFile();
+                }
+                FileWriter fw = new FileWriter(fileCpp.getAbsoluteFile());
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(codeEditor.getText());
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private void saveFileJava(){
+        jFileChooserSave = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Java source code file (.java)", "java");
+        jFileChooserSave.setSelectedFile(new File("Untitled.java"));
+        jFileChooserSave.setAcceptAllFileFilterUsed(false);
+        jFileChooserSave.addChoosableFileFilter(filter);
+        int returnVal = jFileChooserSave.showSaveDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            fileJava = new File(jFileChooserSave.getSelectedFile().getAbsolutePath());
+            try {
+                if(!fileJava.exists()){
+                    fileJava.createNewFile();
+                }
+                FileWriter fw = new FileWriter(fileJava.getAbsoluteFile());
+                BufferedWriter bw = new BufferedWriter(fw);
+                OutputStream output = new OutputStream();
+                output.setFileName(fileJava.getName());
+                bw.write(output.writeToJava());
+                bw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jFileChooserOpen = new javax.swing.JFileChooser();
+        jFileChooserSave = new javax.swing.JFileChooser();
+        jMenuBar = new javax.swing.JMenuBar();
+        jMenuFile = new javax.swing.JMenu();
+        jMenuItemNew = new javax.swing.JMenuItem();
+        jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuItemSave = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItemExit = new javax.swing.JMenuItem();
+        jMenuEdit = new javax.swing.JMenu();
+        jMenuItemUndo = new javax.swing.JMenuItem();
+        jMenuItemRedo = new javax.swing.JMenuItem();
+        jMenuBuild = new javax.swing.JMenu();
+        jMenuItemConvert = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("06PST Mini Compiler");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setPreferredSize(new java.awt.Dimension(600, 400));
+        getContentPane().setLayout(new java.awt.BorderLayout(1, 1));
+
+        jMenuFile.setMnemonic('F');
+        jMenuFile.setText("File");
+
+        jMenuItemNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemNew.setMnemonic('N');
+        jMenuItemNew.setText("New");
+        jMenuItemNew.setToolTipText("Create empty cpp file");
+        jMenuItemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemNewActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemNew);
+
+        jMenuItemOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemOpen.setMnemonic('O');
+        jMenuItemOpen.setText("Open");
+        jMenuItemOpen.setToolTipText("Open existing cpp file");
+        jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemOpenActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemOpen);
+
+        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSave.setMnemonic('S');
+        jMenuItemSave.setText("Save");
+        jMenuItemSave.setToolTipText("Save current cpp file");
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemSave);
+        jMenuFile.add(jSeparator1);
+
+        jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItemExit.setMnemonic('X');
+        jMenuItemExit.setText("Exit");
+        jMenuItemExit.setToolTipText("Quit application");
+        jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExitActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemExit);
+
+        jMenuBar.add(jMenuFile);
+
+        jMenuEdit.setMnemonic('E');
+        jMenuEdit.setText("Edit");
+
+        jMenuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemUndo.setMnemonic('U');
+        jMenuItemUndo.setText("Undo");
+        jMenuEdit.add(jMenuItemUndo);
+
+        jMenuItemRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Y, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemRedo.setMnemonic('R');
+        jMenuItemRedo.setText("Redo");
+        jMenuEdit.add(jMenuItemRedo);
+
+        jMenuBar.add(jMenuEdit);
+
+        jMenuBuild.setMnemonic('B');
+        jMenuBuild.setText("Build");
+        jMenuBuild.setToolTipText("");
+
+        jMenuItemConvert.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
+        jMenuItemConvert.setMnemonic('C');
+        jMenuItemConvert.setText("Convert Cpp To Java");
+        jMenuItemConvert.setToolTipText("Convert cpp file to java...");
+        jMenuItemConvert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemConvertActionPerformed(evt);
+            }
+        });
+        jMenuBuild.add(jMenuItemConvert);
+
+        jMenuBar.add(jMenuBuild);
+
+        setJMenuBar(jMenuBar);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNewActionPerformed
+        if(codeEditor.getText().isEmpty()){
+            codeEditor.setText("");
+        } else {
+            int returnVal = JOptionPane.showConfirmDialog(null, "Save current file before continue?", "Create New File", WIDTH);
+            System.out.println(returnVal);
+            if(returnVal == 0){
+                saveFileCpp();
+            } else if(returnVal == 1){
+                codeEditor.setText("");
+            }
+        }
+    }//GEN-LAST:event_jMenuItemNewActionPerformed
+
+    private void jMenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItemExitActionPerformed
+
+    private void jMenuItemConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConvertActionPerformed
+
+        saveFileJava();
+        //InputStream.startScanning(codeEditor.getText());
+    }//GEN-LAST:event_jMenuItemConvertActionPerformed
+
+    private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
+        jFileChooserOpen = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("C++ source code file (.cpp)", "cpp");
+        jFileChooserOpen.setAcceptAllFileFilterUsed(false);
+        jFileChooserOpen.addChoosableFileFilter(filter);
+        int returnVal = jFileChooserOpen.showDialog(null, "Open File");
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: " +
+                 jFileChooserOpen.getSelectedFile().getName());
+            fileCpp = new File(jFileChooserOpen.getSelectedFile().getAbsolutePath());
+            String editor = InputStream.writeToEditor(fileCpp);
+            codeEditor.setText(editor);
+         }
+
+    }//GEN-LAST:event_jMenuItemOpenActionPerformed
+
+    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
+        saveFileCpp();
+    }//GEN-LAST:event_jMenuItemSaveActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /*
+         * Set the Nimbus look and feel
+         */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /*
+         * Create and display the form
+         */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                new MainFrame().setVisible(true);
+            }
+        });
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser jFileChooserOpen;
+    private javax.swing.JFileChooser jFileChooserSave;
+    private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JMenu jMenuBuild;
+    private javax.swing.JMenu jMenuEdit;
+    private javax.swing.JMenu jMenuFile;
+    private javax.swing.JMenuItem jMenuItemConvert;
+    private javax.swing.JMenuItem jMenuItemExit;
+    private javax.swing.JMenuItem jMenuItemNew;
+    private javax.swing.JMenuItem jMenuItemOpen;
+    private javax.swing.JMenuItem jMenuItemRedo;
+    private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JMenuItem jMenuItemUndo;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    // End of variables declaration//GEN-END:variables
+    private CodeEditorPane codeEditor;
+    private HashMap<String, Color> syntax;
+    private File fileCpp, fileJava; 
+}
